@@ -1175,10 +1175,6 @@ Copyright (c) 2026 SLT Matale
 
 **Purpose:** Customer feedback collection, analytics, sentiment analysis, and AI-assisted customer experience improvement.
 
-**Repository:**
-https://github.com/slt-matale/cfs
-
----
 
 # ⭐ Acknowledgements
 
