@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Portal | SLTMobitel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../assets/css/login.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <div class="login-page">
+
+    
+        <section class="login-info">
+
+            <div class="info-content">
+
+            
+                <div class="brand">
+
+                    <img
+                        src="../assets/images/slt_logo.png"
+                        alt="SLTMobitel"
+                    >
+
+                    <div>
+                        <span class="brand-name">SLTMobitel</span>
+                        <span class="brand-subtitle">
+                            Customer Experience
+                        </span>
+                    </div>
+
+                </div>
+                <div class="info-main">
+
+                    <div class="system-badge">
+
+                        <span class="status-dot"></span>
+
+                        AI-Powered Feedback Platform
+
+                    </div>
+
+
+                    <h1>
+                        Smarter Feedback.<br>
+                        <span>Better Service.</span>
+                    </h1>
+
+
+                    <p>
+                        Manage customer feedback, monitor service
+                        performance, and gain valuable insights with
+                        our intelligent feedback analysis platform.
+                    </p>
+
+
+                    <!-- Features -->
+                    <div class="features">
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                <i data-lucide="bar-chart-3"></i>
+                            </div>
+
+                            <div>
+                                <strong>Real-Time Analytics</strong>
+                                <span>
+                                    Monitor customer feedback instantly
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                <i data-lucide="brain"></i>
+                            </div>
+
+                            <div>
+                                <strong>AI-Powered Insights</strong>
+                                <span>
+                                    Understand customer sentiment automatically
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <div class="feature-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+
+                            <div>
+                                <strong>Secure Administration</strong>
+                                <span>
+                                    Protected access for authorized staff
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="info-footer">
+
+                    <span>
+                        © 2026 SLTMobitel
+                    </span>
+
+                    <span class="footer-divider"></span>
+
+                    <span>
+                        AI Customer Feedback System
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="login-section">
+
+            <div class="login-card">
+
+                <!-- Mobile Logo -->
+                <div class="mobile-logo">
+
+                    <img
+                        src="../assets/images/slt_logo.png"
+                        alt="SLTMobitel"
+                    >
+
+                </div>
+                <div class="login-header">
+
+                    <div class="login-icon">
+
+                        <i data-lucide="shield"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>Welcome Back</h2>
+
+                        <p>
+                            Sign in to your admin account
+                        </p>
+
+                    </div>
+
+                </div>
+                <div class="security-badge">
+
+                    <i data-lucide="lock-keyhole"></i>
+
+                    <span>
+                        Secure Admin Access
+                    </span>
+
+                </div>
+
+
+            
+                <div
+                    id="errorMessage"
+                    class="error-message"
+                    role="alert">
+                </div>
+
+
+            
+                <form id="loginForm">
+
+                
+                    <div class="form-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i
+                                data-lucide="user"
+                                class="input-icon">
+                            </i>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="label-row">
+
+                            <label for="password">
+                                Password
+                            </label>
+
+                        </div>
+
+
+                        <div class="input-wrapper">
+
+                            <i
+                                data-lucide="lock"
+                                class="input-icon">
+                            </i>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="password-toggle"
+                                aria-label="Show password">
+
+                                <i data-lucide="eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="loginBtn"
+                        class="login-btn">
+
+                        <span class="button-content">
+
+                            <i data-lucide="log-in"></i>
+
+                            <span>Sign In</span>
+
+                        </span>
+
+                    </button>
+
+                </form>
+
+                <a
+                    href="../index.html"
+                    class="back-link">
+
+                    <i data-lucide="arrow-left"></i>
+
+                    <span>
+                        Back to Customer Feedback
+                    </span>
+
+                </a>
+
+                <div class="login-footer">
+
+                    <div class="footer-security">
+
+                        <i data-lucide="shield-check"></i>
+
+                        <span>
+                            Your connection is protected
+                        </span>
+
+                    </div>
+
+                    <span class="version">
+                        Admin Portal
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/login.js"></script>
+
+    <script>
+
+        lucide.createIcons();
+
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+        const password =
+            document.getElementById("password");
+
+
+        if (togglePassword && password) {
+
+            togglePassword.addEventListener(
+                "click",
+                function () {
+
+                    const hidden =
+                        password.type === "password";
+
+                    password.type =
+                        hidden ? "text" : "password";
+
+                    this.innerHTML = hidden
+                        ? '<i data-lucide="eye-off"></i>'
+                        : '<i data-lucide="eye"></i>';
+
+                    this.setAttribute(
+                        "aria-label",
+                        hidden
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+                    lucide.createIcons();
+
+                }
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+

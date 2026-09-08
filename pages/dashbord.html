@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SLTMobitel | AI Customer Experience Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+
+<body>
+
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="sidebar-logo">
+            <img src="../assets/images/slt_logo.png"
+                 alt="SLTMobitel Logo">
+        </div>
+
+        <div class="sidebar-brand-text">
+            <strong>SLTMobitel</strong>
+            <span>AI Feedback Portal</span>
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <div class="nav-section">
+            <span class="nav-label">MAIN</span>
+
+            <a href="dashboard.html" class="nav-item active">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="dashboard.html#analytics" class="nav-item">
+                <i data-lucide="bar-chart-3"></i>
+                <span>Analytics</span>
+            </a>
+
+            <a href="dashboard.html#feedback" class="nav-item">
+                <i data-lucide="message-square-text"></i>
+                <span>Customer Feedback</span>
+            </a>
+        </div>
+
+
+        <div class="nav-section">
+
+            <span class="nav-label">AI & REPORTS</span>
+
+            <a href="dashboard.html#ai-insights" class="nav-item">
+                <i data-lucide="sparkles"></i>
+                <span>AI Insights</span>
+            </a>
+
+            <a href="dashboard.html#reports" class="nav-item">
+                <i data-lucide="file-bar-chart"></i>
+                <span>Reports</span>
+            </a>
+
+            <a href="negative-feedback.html" class="nav-item">
+                <i data-lucide="triangle-alert"></i>
+                <span>Negative Feedback</span>
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+
+            <span class="status-dot"></span>
+
+            <div>
+                <strong>System Online</strong>
+                <small>AI services active</small>
+            </div>
+
+        </div>
+
+
+        <button type="button"
+                class="sidebar-logout"
+                id="logoutBtn">
+
+            <i data-lucide="log-out"></i>
+            <span>Logout</span>
+
+        </button>
+
+    </div>
+
+</aside>
+
+<div class="main-wrapper">
+
+
+    <header class="top-header">
+
+        <div class="header-left">
+
+            <button class="mobile-menu-btn"
+                    type="button"
+                    id="mobileMenuBtn">
+
+                <i data-lucide="menu"></i>
+
+            </button>
+
+
+            <div>
+
+                <span class="header-eyebrow">
+                    ADMIN PORTAL
+                </span>
+
+                <h1>
+                    Customer Experience Dashboard
+                </h1>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <div class="header-date">
+
+                <i data-lucide="calendar-days"></i>
+
+                <span id="currentDate">
+                    --
+                </span>
+
+            </div>
+
+
+            <button type="button"
+                    class="header-refresh"
+                    id="refreshBtn"
+                    title="Refresh Dashboard">
+
+                <i data-lucide="refresh-cw"></i>
+
+            </button>
+
+        </div>
+
+    </header>
+    <main class="dashboard-container">
+
+
+
+        <section class="dashboard-intro">
+
+            <div>
+
+                <span class="intro-label">
+                    CUSTOMER EXPERIENCE
+                </span>
+
+                <h2>
+                    Overview & Analytics
+                </h2>
+
+                <p>
+                    Monitor customer satisfaction, service quality
+                    and AI-powered feedback insights in real time.
+                </p>
+
+            </div>
+
+
+            <div class="live-indicator">
+
+                <span class="live-dot"></span>
+
+                <span>Live Data</span>
+
+            </div>
+
+        </section>
+
+        <section class="filter-card">
+
+            <div class="filter-title">
+
+                <div class="filter-icon">
+                    <i data-lucide="calendar-range"></i>
+                </div>
+
+                <div>
+                    <strong>Date Range</strong>
+                    <span>Filter customer feedback records</span>
+                </div>
+
+            </div>
+
+
+            <div class="filter-controls">
+
+                <div class="date-field">
+
+                    <label for="startDate">
+                        From
+                    </label>
+
+                    <input type="date"
+                           id="startDate">
+
+                </div>
+
+
+                <div class="date-separator">
+                    →
+                </div>
+
+
+                <div class="date-field">
+
+                    <label for="endDate">
+                        To
+                    </label>
+
+                    <input type="date"
+                           id="endDate">
+
+                </div>
+
+
+                <button type="button"
+                        class="filter-btn primary"
+                        id="applyDateFilter">
+
+                    <i data-lucide="filter"></i>
+                    Apply Filter
+
+                </button>
+
+
+                <button type="button"
+                        class="filter-btn secondary"
+                        id="filterToday">
+
+                    Today
+
+                </button>
+
+
+                <button type="button"
+                        class="filter-btn secondary"
+                        id="filterAllTime">
+
+                    All Time
+
+                </button>
+
+            </div>
+
+
+            <span id="dateFilterStatus"
+                  class="date-filter-status"></span>
+
+        </section>
+
+
+        <div id="errorMessage"></div>
+
+        <section class="kpi-grid">
+
+            <!-- Total -->
+
+            <div class="kpi-card">
+
+                <div class="kpi-top">
+
+                    <div class="kpi-icon blue">
+                        <i data-lucide="messages-square"></i>
+                    </div>
+
+                    <span class="kpi-badge">
+                        All
+                    </span>
+
+                </div>
+
+                <div class="kpi-content">
+
+                    <span class="kpi-label">
+                        Total Feedback
+                    </span>
+
+                    <strong id="totalFeedback">
+                        0
+                    </strong>
+
+                    <small>
+                        All submitted responses
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-top">
+
+                    <div class="kpi-icon green">
+                        <i data-lucide="smile"></i>
+                    </div>
+
+                    <span class="kpi-badge success">
+                        Positive
+                    </span>
+
+                </div>
+
+                <div class="kpi-content">
+
+                    <span class="kpi-label">
+                        Positive Feedback
+                    </span>
+
+                    <strong id="positiveFeedback">
+                        0
+                    </strong>
+
+                    <small id="positivePercent">
+                        0%
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-top">
+
+                    <div class="kpi-icon orange">
+                        <i data-lucide="meh"></i>
+                    </div>
+
+                    <span class="kpi-badge neutral-badge">
+                        Neutral
+                    </span>
+
+                </div>
+
+                <div class="kpi-content">
+
+                    <span class="kpi-label">
+                        Neutral Feedback
+                    </span>
+
+                    <strong id="neutralFeedback">
+                        0
+                    </strong>
+
+                    <small id="neutralPercent">
+                        0%
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-top">
+
+                    <div class="kpi-icon red">
+                        <i data-lucide="frown"></i>
+                    </div>
+
+                    <span class="kpi-badge danger">
+                        Attention
+                    </span>
+
+                </div>
+
+                <div class="kpi-content">
+
+                    <span class="kpi-label">
+                        Negative Feedback
+                    </span>
+
+                    <strong id="negativeFeedback">
+                        0
+                    </strong>
+
+                    <small id="negativePercent">
+                        0%
+                    </small>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="reports-card"
+                 id="reports">
+
+            <div class="reports-content">
+
+                <div class="reports-icon">
+                    <i data-lucide="file-bar-chart-2"></i>
+                </div>
+
+                <div>
+
+                    <span class="reports-label">
+                        REPORT CENTER
+                    </span>
+
+                    <h3>
+                        Reports & Data
+                    </h3>
+
+                    <p>
+                        Generate professional reports from the
+                        latest customer feedback records.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-buttons">
+
+                <button type="button"
+                        class="report-btn primary"
+                        onclick="downloadAISummaryWord()">
+
+                    <i data-lucide="file-text"></i>
+
+                    <span>
+                        AI Summary Report
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                        class="report-btn green"
+                        onclick="downloadFeedbackWord()">
+
+                    <i data-lucide="database"></i>
+
+                    <span>
+                        Feedback Data
+                    </span>
+
+                </button>
+
+
+                <a href="negative-feedback.html"
+                   class="report-btn warning">
+
+                    <i data-lucide="triangle-alert"></i>
+
+                    <span>
+                        Negative Review
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <section id="analytics">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span>
+                        ANALYTICS
+                    </span>
+
+                    <h2>
+                        Customer Experience Insights
+                    </h2>
+
+                </div>
+
+                <p>
+                    Visual analysis of customer feedback
+                </p>
+
+            </div>
+
+
+            <div class="analytics-grid">
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <span class="chart-label">
+                                CUSTOMER SENTIMENT
+                            </span>
+
+                            <h3>
+                                Sentiment Analysis
+                            </h3>
+
+                        </div>
+
+                        <div class="chart-icon">
+                            <i data-lucide="heart-pulse"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+
+                </div>
+
+
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <span class="chart-label">
+                                SERVICE DISTRIBUTION
+                            </span>
+
+                            <h3>
+                                Service Used
+                            </h3>
+
+                        </div>
+
+                        <div class="chart-icon">
+                            <i data-lucide="network"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="serviceChart"></canvas>
+                    </div>
+
+                </div>
+
+
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <span class="chart-label">
+                                SERVICE QUALITY
+                            </span>
+
+                            <h3>
+                                Waiting Time
+                            </h3>
+
+                        </div>
+
+                        <div class="chart-icon">
+                            <i data-lucide="clock-3"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="waitingChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <span class="chart-label">
+                                STAFF EXPERIENCE
+                            </span>
+
+                            <h3>
+                                Staff Rating
+                            </h3>
+
+                        </div>
+
+                        <div class="chart-icon">
+                            <i data-lucide="users-round"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="staffChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <span class="chart-label">
+                                OFFICE EXPERIENCE
+                            </span>
+
+                            <h3>
+                                Office Environment
+                            </h3>
+
+                        </div>
+
+                        <div class="chart-icon">
+                            <i data-lucide="building-2"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="officeChart"></canvas>
+                    </div>
+
+                </div>
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <span class="chart-label">
+                                FEEDBACK ACTIVITY
+                            </span>
+
+                            <h3>
+                                Weekly Trend
+                            </h3>
+
+                        </div>
+
+                        <div class="chart-icon">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="ai-section"
+                 id="ai-insights">
+
+            <div class="ai-header">
+
+                <div class="ai-title">
+
+                    <div class="ai-icon">
+                        <i data-lucide="sparkles"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            ARTIFICIAL INTELLIGENCE
+                        </span>
+
+                        <h2>
+                            AI Customer Feedback Summary
+                        </h2>
+
+                        <p>
+                            AI-powered analysis of customer experience
+                            and service quality.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ai-status">
+
+                    <span></span>
+
+                    AI Analysis Active
+
+                </div>
+
+            </div>
+
+
+            <div class="report-date"
+                 id="reportDate">
+
+                Report Generated: --
+
+            </div>
+
+
+            <div class="ai-report-content">
+
+                <div class="ai-block">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            01
+                        </span>
+
+                        <h3>
+                            Feedback Overview
+                        </h3>
+
+                    </div>
+
+                    <div class="summary-text"
+                         id="overviewText">
+
+                        <span class="skeleton-text"></span>
+                        <span class="skeleton-text"></span>
+
+                    </div>
+
+                </div>
+
+                <div class="ai-block">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            02
+                        </span>
+
+                        <h3>
+                            Sentiment Analysis
+                        </h3>
+
+                    </div>
+
+                    <div id="sentimentPercentages">
+
+                        <span class="skeleton-text"></span>
+                        <span class="skeleton-text"></span>
+
+                    </div>
+
+                </div>
+
+                <div class="ai-block">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            03
+                        </span>
+
+                        <h3>
+                            Service Summary
+                        </h3>
+
+                    </div>
+
+                    <div class="summary-text"
+                         id="serviceSummary">
+
+                        <span class="skeleton-text"></span>
+                        <span class="skeleton-text"></span>
+
+                    </div>
+
+                </div>
+
+                <div class="ai-block">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            04
+                        </span>
+
+                        <h3>
+                            Customer Experience Ratings
+                        </h3>
+
+                    </div>
+
+                    <div class="summary-text"
+                         id="ratingSummary">
+
+                        <span class="skeleton-text"></span>
+                        <span class="skeleton-text"></span>
+
+                    </div>
+
+                </div>
+                <div class="ai-block highlight">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            05
+                        </span>
+
+                        <h3>
+                            Overall Summary
+                        </h3>
+
+                    </div>
+
+                    <div class="summary-text"
+                         id="overallSummary">
+
+                        <span class="skeleton-text"></span>
+                        <span class="skeleton-text"></span>
+
+                    </div>
+
+                </div>
+
+                <div class="ai-block">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            06
+                        </span>
+
+                        <h3>
+                            Key Findings
+                        </h3>
+
+                    </div>
+
+                    <ul class="findings"
+                        id="keyFindings">
+
+                        <li>
+                            <span class="finding-dot"></span>
+                            <span class="skeleton-text"></span>
+                        </li>
+
+                        <li>
+                            <span class="finding-dot"></span>
+                            <span class="skeleton-text"></span>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="ai-block">
+
+                    <div class="ai-block-title">
+
+                        <span class="number">
+                            07
+                        </span>
+
+                        <h3>
+                            Customer Comments
+                        </h3>
+
+                    </div>
+
+                    <div id="summaryComments">
+
+                        <div class="loading-state">
+
+                            <i data-lucide="loader-2"
+                               class="spin"></i>
+
+                            <span>
+                                Analyzing customer comments...
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+        <section class="feedback-section"
+                 id="feedback">
+
+            <div class="table-header">
+
+                <div class="table-title">
+
+                    <div class="table-icon">
+                        <i data-lucide="database"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            CUSTOMER RECORDS
+                        </span>
+
+                        <h2>
+                            Customer Feedback Data
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="record-count"
+                     id="recordCount">
+
+                    0 records
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Service</th>
+                            <th>Phone</th>
+                            <th>Waiting</th>
+                            <th>Staff</th>
+                            <th>Office</th>
+                            <th>Parking</th>
+                            <th>Comment</th>
+                            <th>Sentiment</th>
+                            <th>Created At</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="feedbackTableBody">
+
+                        <tr>
+
+                            <td colspan="10">
+
+                                <div class="table-loading">
+
+                                    <i data-lucide="loader-2"
+                                       class="spin"></i>
+
+                                    Loading customer feedback...
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <footer class="dashboard-footer">
+
+            <div>
+
+                <strong>
+                    SLTMobitel
+                </strong>
+
+                <span>
+                    AI Customer Feedback Analytics System
+                </span>
+
+            </div>
+
+            <span>
+                Secure Admin Portal
+            </span>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+
+<script>
+
+    lucide.createIcons();
+
+    const currentDateElement =
+        document.getElementById("currentDate");
+
+    if (currentDateElement) {
+
+        const today = new Date();
+
+        currentDateElement.textContent =
+            today.toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+
+    }
+
+    const mobileMenuBtn =
+        document.getElementById("mobileMenuBtn");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    if (mobileMenuBtn && sidebar) {
+
+        mobileMenuBtn.addEventListener("click", () => {
+
+            sidebar.classList.toggle("mobile-open");
+
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
+
+
