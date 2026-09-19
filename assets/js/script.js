@@ -284,18 +284,9 @@ function showQuestion() {
 
 
     let questionText =
-        question.question;
-
-
-    
-    if (
-        currentLanguage === "si" &&
-        question.question_si
-    ) {
-
-        questionText =
-            question.question_si;
-    }
+    currentLanguage === "si"
+        ? question.question_si
+        : question.question_en;
 
 
     addBotMessage(questionText);
