@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://sltmobitel-custeomer-feedback.onrender.com";
 
 let questions = [];
 let currentQuestion = 0;
@@ -6,9 +6,7 @@ let answers = {};
 let currentLanguage = "en";
 
 
-// ================================
-// LANGUAGE
-// ================================
+
 
 function setLanguage(language) {
     currentLanguage = language;
@@ -18,10 +16,6 @@ function setLanguage(language) {
     showQuestion();
 }
 
-
-// ================================
-// LOAD QUESTIONS
-// ================================
 
 async function loadQuestions() {
 
@@ -100,10 +94,6 @@ async function loadQuestions() {
 }
 
 
-// ================================
-// SHOW QUESTION
-// ================================
-
 function showQuestion() {
 
     const questionElement =
@@ -157,10 +147,6 @@ function showQuestion() {
     optionsElement.innerHTML = "";
 
 
-    // ============================
-    // PHONE QUESTION
-    // ============================
-
     if (q.key === "phone") {
 
         optionsElement.innerHTML = `
@@ -199,9 +185,6 @@ function showQuestion() {
     }
 
 
-    // ============================
-    // NORMAL OPTIONS
-    // ============================
 
     if (!q.options || q.options.length === 0) {
 
