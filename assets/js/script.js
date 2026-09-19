@@ -1,6 +1,4 @@
-const API_URL =
-    window.API_BASE_URL ||
-    "http://localhost:8000";
+const API_URL = "https://sltmobitel-custeomer-feedback.onrender.com";
 
 let questions = [];
 let currentQuestion = 0;
