@@ -384,10 +384,58 @@ function showQuestion() {
     }
 
 
-    if (
-        question.options &&
-        question.options.length > 0
-    ) {
+  const options =
+    currentLanguage === "si"
+        ? question.options_si
+        : question.options_en;
+
+if (
+    options &&
+    options.length > 0
+) {
+
+    const optionsDiv =
+        document.createElement("div");
+
+    optionsDiv.className =
+        "options";
+
+    options.forEach(
+        function (option, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+
+            button.className =
+                "option-button";
+
+            button.textContent =
+                option;
+
+            button.onclick =
+                function () {
+
+                    const englishOption =
+                        question.options_en[index];
+
+                    selectOption(englishOption);
+
+                };
+
+            optionsDiv.appendChild(
+                button
+            );
+        }
+    );
+
+    chatBox.appendChild(
+        optionsDiv
+    );
+
+    scrollChat();
+}
 
         const optionsDiv =
             document.createElement("div");
