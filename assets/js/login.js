@@ -1,101 +1,216 @@
-const API_BASE_URL = "https://sltmobitel-custeomer-feedback.onrender.com";
+const API_BASE_URL =
+    "https://sltmobitel-custeomer-feedback.onrender.com";
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const loginForm = document.getElementById("loginForm");
-    const errorMessage = document.getElementById("errorMessage");
-    const loginBtn = document.getElementById("loginBtn");
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const errorMessage =
+        document.getElementById("errorMessage");
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
 
     if (!loginForm) {
         console.error("loginForm not found");
         return;
     }
 
-    loginForm.addEventListener("submit", async function (event) {
 
-        event.preventDefault();
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
 
-        const username =
-            document.getElementById("username").value.trim();
+            event.preventDefault();
 
-        const password =
-            document.getElementById("password").value;
 
-        errorMessage.textContent = "";
-        errorMessage.style.display = "none";
+            const username =
+                document
+                    .getElementById("username")
+                    .value
+                    .trim();
 
-        loginBtn.disabled = true;
 
-        loginBtn.querySelector(".button-content span").textContent =
-            "Signing in...";
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
 
-        try {
 
-            const response = await fetch(
-                API_BASE_URL + "/login",
-                {
-                    method: "POST",
+            console.log("Trying login...");
+            console.log("Username:", username);
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
 
-                    body: JSON.stringify({
-                        username: username,
-                        password: password
-                    })
-                }
-            );
+            if (errorMessage) {
 
-            const data = await response.json();
+                errorMessage.textContent = "";
+                errorMessage.style.display = "none";
 
-            console.log("Login response:", data);
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.detail || "Invalid username or password"
-                );
             }
 
-            // Backend returns the login token
-            const token =
-                typeof data === "string"
-                    ? data
-                    : (
-                        data.access_token ||
-                        data.token ||
-                        data.accessToken
+
+            if (loginBtn) {
+
+                loginBtn.disabled = true;
+
+                const text =
+                    loginBtn.querySelector(
+                        ".button-content span"
                     );
 
-            if (token) {
-                sessionStorage.setItem("adminToken", token);
+                if (text) {
+                    text.textContent =
+                        "Signing in...";
+                }
             }
 
-            sessionStorage.setItem(
-                "adminLoggedIn",
-                "true"
-            );
 
-            // Go to dashboard
-            window.location.href =
-                "../pages/dashboard.html";
+            try {
 
-        } catch (error) {
+                const response =
+                    await fetch(
+                        API_BASE_URL + "/login",
+                        {
+                            method: "POST",
 
-            console.error("Login error:", error);
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-            errorMessage.textContent =
-                "❌ " + error.message;
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+                        }
+                    );
 
-            errorMessage.style.display = "block";
 
-            loginBtn.disabled = false;
+                console.log(
+                    "Login HTTP status:",
+                    response.status
+                );
 
-            loginBtn.querySelector(".button-content span").textContent =
-                "Sign In";
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "Login response:",
+                    data
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.detail ||
+                        "Invalid username or password"
+                    );
+
+                }
+
+
+                let token = null;
+
+
+                if (typeof data === "string") {
+
+                    token = data;
+
+                }
+                else if (data.access_token) {
+
+                    token = data.access_token;
+
+                }
+                else if (data.token) {
+
+                    token = data.token;
+
+                }
+                else if (data.accessToken) {
+
+                    token = data.accessToken;
+
+                }
+
+
+                if (token) {
+
+                    sessionStorage.setItem(
+                        "adminToken",
+                        token
+                    );
+
+                }
+
+
+                sessionStorage.setItem(
+                    "adminLoggedIn",
+                    "true"
+                );
+
+
+                console.log(
+                    "Login successful."
+                );
+
+
+                console.log(
+                    "Opening dashboard..."
+                );
+
+
+                window.location.href =
+                    "../pages/dashboard.html";
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Login error:",
+                    error
+                );
+
+
+                if (errorMessage) {
+
+                    errorMessage.textContent =
+                        "❌ " + error.message;
+
+                    errorMessage.style.display =
+                        "block";
+
+                }
+
+
+                if (loginBtn) {
+
+                    loginBtn.disabled = false;
+
+
+                    const text =
+                        loginBtn.querySelector(
+                            ".button-content span"
+                        );
+
+
+                    if (text) {
+
+                        text.textContent =
+                            "Sign In";
+
+                    }
+
+                }
+
+            }
+
         }
-
-    });
+    );
 
 });
