@@ -10,6 +10,9 @@ const userInput = document.getElementById("userInput");
 const inputArea = document.getElementById("inputArea");
 
 
+// ============================================
+// LANGUAGE
+// ============================================
 
 function setLanguage(language) {
 
@@ -23,6 +26,7 @@ function setLanguage(language) {
         showQuestion();
     }
 }
+
 
 function updateLanguageButtons(language) {
 
@@ -46,6 +50,11 @@ function updateLanguageButtons(language) {
     }
 }
 
+
+// ============================================
+// LOAD QUESTIONS FROM RENDER
+// ============================================
+
 async function loadQuestions() {
 
     console.log(
@@ -56,10 +65,13 @@ async function loadQuestions() {
     try {
 
         const response =
-            await fetch(API_URL + "/questions", {
-                method: "GET",
-                cache: "no-store"
-            });
+            await fetch(
+                API_URL + "/questions",
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
 
         console.log(
             "Questions HTTP status:",
@@ -132,37 +144,36 @@ async function loadQuestions() {
 }
 
 
+// ============================================
+// CONNECTION ERROR
+// ============================================
 
 function showConnectionError(message) {
 
     if (!chatBox) {
+
         console.error(
             "chatBox element not found."
         );
+
         return;
     }
 
     chatBox.innerHTML = `
 
         <div class="bot-message">
-
             ❌ Cannot load questions.
-
         </div>
 
         <div class="bot-message">
-
-            Please make sure FastAPI is running
-            on port 8000.
-
+            Please check your internet connection
+            and try again.
         </div>
 
         <div class="bot-message">
-
             <small>
                 ${message}
             </small>
-
         </div>
 
         <div style="
@@ -188,13 +199,18 @@ function showConnectionError(message) {
 }
 
 
+// ============================================
+// START CHAT
+// ============================================
 
 function startChat() {
 
     if (!chatBox) {
+
         console.error(
             "chatBox not found."
         );
+
         return;
     }
 
@@ -208,7 +224,9 @@ function startChat() {
     }
 
     if (userInput) {
+
         userInput.value = "";
+
         userInput.disabled = false;
     }
 
@@ -234,13 +252,20 @@ function startChat() {
     );
 
 
-    setTimeout(function () {
+    setTimeout(
+        function () {
 
-        showQuestion();
+            showQuestion();
 
-    }, 600);
+        },
+        600
+    );
 }
 
+
+// ============================================
+// SHOW CURRENT QUESTION
+// ============================================
 
 function showQuestion() {
 
@@ -283,15 +308,24 @@ function showQuestion() {
     }
 
 
-    let questionText =
-    currentLanguage === "si"
-        ? question.question_si
-        : question.question_en;
+    // ========================================
+    // QUESTION TEXT
+    // ========================================
+
+    const questionText =
+        currentLanguage === "si"
+            ? question.question_si
+            : question.question_en;
 
 
-    addBotMessage(questionText);
+    addBotMessage(
+        questionText
+    );
 
 
+    // ========================================
+    // PHONE QUESTION
+    // ========================================
 
     if (question.key === "phone") {
 
@@ -313,8 +347,14 @@ function showQuestion() {
         const skipButton =
             document.createElement("button");
 
+
+        skipButton.type =
+            "button";
+
+
         skipButton.className =
             "skip-button";
+
 
         skipButton.textContent =
             currentLanguage === "si"
@@ -332,7 +372,6 @@ function showQuestion() {
                 );
 
                 saveAnswer("");
-
             };
 
 
@@ -346,6 +385,10 @@ function showQuestion() {
         return;
     }
 
+
+    // ========================================
+    // COMMENT QUESTION
+    // ========================================
 
     if (question.key === "comment") {
 
@@ -369,6 +412,10 @@ function showQuestion() {
     }
 
 
+    // ========================================
+    // NORMAL INPUT
+    // ========================================
+
     if (userInput) {
 
         userInput.placeholder =
@@ -384,102 +431,61 @@ function showQuestion() {
     }
 
 
-  const options =
-    currentLanguage === "si"
-        ? question.options_si
-        : question.options_en;
+    // ========================================
+    // OPTIONS
+    // ========================================
 
-if (
-    options &&
-    options.length > 0
-) {
+    const options =
+        currentLanguage === "si"
+            ? question.options_si
+            : question.options_en;
 
-    const optionsDiv =
-        document.createElement("div");
 
-    optionsDiv.className =
-        "options";
-
-    options.forEach(
-        function (option, index) {
-
-            const button =
-                document.createElement("button");
-
-            button.type = "button";
-
-            button.className =
-                "option-button";
-
-            button.textContent =
-                option;
-
-            button.onclick =
-                function () {
-
-                    const englishOption =
-                        question.options_en[index];
-
-                    selectOption(englishOption);
-
-                };
-
-            optionsDiv.appendChild(
-                button
-            );
-        }
-    );
-
-    chatBox.appendChild(
-        optionsDiv
-    );
-
-    scrollChat();
-}
+    if (
+        options &&
+        options.length > 0
+    ) {
 
         const optionsDiv =
             document.createElement("div");
+
 
         optionsDiv.className =
             "options";
 
 
-        question.options.forEach(
-            function (option) {
+        options.forEach(
+            function (option, index) {
 
                 const button =
                     document.createElement("button");
 
-                button.type = "button";
+
+                button.type =
+                    "button";
+
 
                 button.className =
                     "option-button";
 
 
-                let optionText =
-                    option;
-
-
-                if (
-                    currentLanguage === "si" &&
-                    question.options_si &&
-                    question.options_si[option]
-                ) {
-
-                    optionText =
-                        question.options_si[option];
-                }
-
-
+                // Display selected language
                 button.textContent =
-                    optionText;
+                    option;
 
 
                 button.onclick =
                     function () {
 
-                        selectOption(option);
+                        // Always save English
+                        // value to database
+                        const englishOption =
+                            question.options_en[index];
 
+
+                        selectOption(
+                            englishOption
+                        );
                     };
 
 
@@ -500,12 +506,25 @@ if (
 }
 
 
+// ============================================
+// SELECT OPTION
+// ============================================
+
 function selectOption(option) {
 
-    addUserMessage(option);
+    addUserMessage(
+        option
+    );
 
-    saveAnswer(option);
+    saveAnswer(
+        option
+    );
 }
+
+
+// ============================================
+// SEND TEXT ANSWER
+// ============================================
 
 function sendAnswer() {
 
@@ -528,16 +547,25 @@ function sendAnswer() {
             ? userInput.value.trim()
             : "";
 
+
+    // ========================================
+    // EMPTY ANSWER
+    // ========================================
+
     if (answer === "") {
 
+
         // Phone is optional
-        if (question.key === "phone") {
+        if (
+            question.key === "phone"
+        ) {
 
             addUserMessage(
                 currentLanguage === "si"
                     ? "මඟ හැරියා"
                     : "Skipped"
             );
+
 
             saveAnswer("");
 
@@ -546,13 +574,16 @@ function sendAnswer() {
 
 
         // Comment is optional
-        if (question.key === "comment") {
+        if (
+            question.key === "comment"
+        ) {
 
             addUserMessage(
                 currentLanguage === "si"
                     ? "අදහසක් නැත"
                     : "No comment"
             );
+
 
             saveAnswer("");
 
@@ -566,16 +597,29 @@ function sendAnswer() {
                 : "Please select an answer."
         );
 
+
         return;
     }
 
-    if (question.key === "phone") {
+
+    // ========================================
+    // PHONE VALIDATION
+    // ========================================
+
+    if (
+        question.key === "phone"
+    ) {
 
         const phone =
-            answer.replace(/\s/g, "");
+            answer.replace(
+                /\s/g,
+                ""
+            );
 
 
-        if (!/^\d{10}$/.test(phone)) {
+        if (
+            !/^\d{10}$/.test(phone)
+        ) {
 
             addBotMessage(
                 `<i
@@ -594,27 +638,49 @@ function sendAnswer() {
                 }`
             );
 
+
             return;
         }
 
 
-        addUserMessage(phone);
+        addUserMessage(
+            phone
+        );
+
 
         userInput.value = "";
 
-        saveAnswer(phone);
+
+        saveAnswer(
+            phone
+        );
+
 
         return;
     }
 
 
-    addUserMessage(answer);
+    // ========================================
+    // NORMAL ANSWER
+    // ========================================
+
+    addUserMessage(
+        answer
+    );
+
 
     userInput.value = "";
 
-    saveAnswer(answer);
+
+    saveAnswer(
+        answer
+    );
 }
 
+
+// ============================================
+// SAVE ANSWER
+// ============================================
 
 function saveAnswer(answer) {
 
@@ -652,6 +718,9 @@ function saveAnswer(answer) {
 }
 
 
+// ============================================
+// ADD BOT MESSAGE
+// ============================================
 
 function addBotMessage(message) {
 
@@ -663,21 +732,30 @@ function addBotMessage(message) {
     const div =
         document.createElement("div");
 
+
     div.className =
         "bot-message";
+
 
     div.innerHTML =
         message;
 
 
-    chatBox.appendChild(div);
+    chatBox.appendChild(
+        div
+    );
+
 
     scrollChat();
+
 
     createIcons();
 }
 
 
+// ============================================
+// ADD USER MESSAGE
+// ============================================
 
 function addUserMessage(message) {
 
@@ -689,18 +767,27 @@ function addUserMessage(message) {
     const div =
         document.createElement("div");
 
+
     div.className =
         "user-message";
+
 
     div.textContent =
         message;
 
 
-    chatBox.appendChild(div);
+    chatBox.appendChild(
+        div
+    );
+
 
     scrollChat();
 }
 
+
+// ============================================
+// SCROLL CHAT
+// ============================================
 
 function scrollChat() {
 
@@ -712,6 +799,9 @@ function scrollChat() {
 }
 
 
+// ============================================
+// LUCIDE ICONS
+// ============================================
 
 function createIcons() {
 
@@ -722,10 +812,14 @@ function createIcons() {
 }
 
 
+// ============================================
+// FINISH CHAT / SEND FEEDBACK
+// ============================================
 
 async function finishChat() {
 
     if (inputArea) {
+
         inputArea.style.display =
             "none";
     }
@@ -742,7 +836,11 @@ async function finishChat() {
                 margin-right:4px;
             "
         ></i>
-        Saving your feedback...`
+        ${
+            currentLanguage === "si"
+                ? "ඔබගේ ප්‍රතිපෝෂණය සුරකිමින්..."
+                : "Saving your feedback..."
+        }`
     );
 
 
@@ -752,28 +850,39 @@ async function finishChat() {
     );
 
 
+    // ========================================
+    // FEEDBACK DATA
+    // ========================================
+
     const feedbackData = {
 
         service:
-            answers.service || null,
+            answers.service ||
+            null,
 
         phone:
-            answers.phone || null,
+            answers.phone ||
+            null,
 
         waiting:
-            answers.waiting || null,
+            answers.waiting ||
+            null,
 
         staff:
-            answers.staff || null,
+            answers.staff ||
+            null,
 
         office:
-            answers.office || null,
+            answers.office ||
+            null,
 
         parking:
-            answers.parking || null,
+            answers.parking ||
+            null,
 
         comment:
-            answers.comment || null
+            answers.comment ||
+            null
     };
 
 
@@ -823,6 +932,10 @@ async function finishChat() {
         }
 
 
+        // ====================================
+        // SUCCESS MESSAGE
+        // ====================================
+
         addBotMessage(
             `<i
                 data-lucide="check-circle-2"
@@ -848,6 +961,10 @@ async function finishChat() {
         );
 
 
+        // ====================================
+        // START NEW SESSION
+        // ====================================
+
         setTimeout(
             function () {
 
@@ -862,7 +979,11 @@ async function finishChat() {
                             margin-right:4px;
                         "
                     ></i>
-                    Starting a new feedback session...`
+                    ${
+                        currentLanguage === "si"
+                            ? "නව ප්‍රතිපෝෂණ සැසියක් ආරම්භ කරමින්..."
+                            : "Starting a new feedback session..."
+                    }`
                 );
 
             },
@@ -889,6 +1010,7 @@ async function finishChat() {
 
 
         if (inputArea) {
+
             inputArea.style.display =
                 "flex";
         }
@@ -904,16 +1026,26 @@ async function finishChat() {
                     margin-right:4px;
                 "
             ></i>
-            Sorry, your feedback could not be saved.`
+            ${
+                currentLanguage === "si"
+                    ? "කණගාටුයි, ඔබගේ ප්‍රතිපෝෂණය සුරැකීමට නොහැකි විය."
+                    : "Sorry, your feedback could not be saved."
+            }`
         );
 
 
         addBotMessage(
-            "Please check that FastAPI and Supabase are running."
+            currentLanguage === "si"
+                ? "කරුණාකර නැවත උත්සාහ කරන්න."
+                : "Please try again."
         );
     }
 }
 
+
+// ============================================
+// RESTART FEEDBACK
+// ============================================
 
 function restartFeedback() {
 
@@ -925,6 +1057,9 @@ function restartFeedback() {
 }
 
 
+// ============================================
+// ENTER KEY
+// ============================================
 
 if (userInput) {
 
@@ -944,6 +1079,9 @@ if (userInput) {
 }
 
 
+// ============================================
+// MAKE FUNCTIONS AVAILABLE TO HTML
+// ============================================
 
 window.setLanguage =
     setLanguage;
@@ -976,6 +1114,9 @@ window.updateLanguageButtons =
     updateLanguageButtons;
 
 
+// ============================================
+// PAGE LOAD
+// ============================================
 
 document.addEventListener(
     "DOMContentLoaded",
