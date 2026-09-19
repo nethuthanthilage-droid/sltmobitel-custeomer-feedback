@@ -1,297 +1,101 @@
-const API_BASE_URL =
-    "https://sltmobitel-custeomer-feedback.onrender.com";
-
-
-
+const API_BASE_URL = "https://sltmobitel-custeomer-feedback.onrender.com";
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    console.log("Admin Login System Started");
-
-    const loginForm =
-        document.getElementById("loginForm");
-
-    const usernameInput =
-        document.getElementById("username");
-
-    const passwordInput =
-        document.getElementById("password");
-
-    const loginBtn =
-        document.getElementById("loginBtn");
-
-    const errorMessage =
-        document.getElementById("errorMessage");
-
+    const loginForm = document.getElementById("loginForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const loginBtn = document.getElementById("loginBtn");
 
     if (!loginForm) {
-
-        console.error(
-            "loginForm not found."
-        );
-
+        console.error("loginForm not found");
         return;
     }
 
+    loginForm.addEventListener("submit", async function (event) {
 
-    loginForm.addEventListener(
-        "submit",
-        async function (event) {
+        event.preventDefault();
 
-            event.preventDefault();
+        const username =
+            document.getElementById("username").value.trim();
 
+        const password =
+            document.getElementById("password").value;
 
-            const username =
-                usernameInput.value.trim();
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
 
-            const password =
-                passwordInput.value;
+        loginBtn.disabled = true;
 
+        loginBtn.querySelector(".button-content span").textContent =
+            "Signing in...";
 
-            // Clear previous error
-            errorMessage.textContent = "";
-            errorMessage.style.display = "none";
+        try {
 
+            const response = await fetch(
+                API_BASE_URL + "/login",
+                {
+                    method: "POST",
 
-            // Check empty fields
-            if (!username || !password) {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-                showError(
-                    "Please enter your username and password."
-                );
-
-                return;
-            }
-
-
-            // Disable button
-            loginBtn.disabled = true;
-
-            loginBtn.innerHTML = `
-                <span class="button-content">
-                    <i data-lucide="loader-2" class="spin"></i>
-                    <span>Signing In...</span>
-                </span>
-            `;
-
-
-            if (window.lucide) {
-                lucide.createIcons();
-            }
-
-
-            console.log(
-                "Sending login request..."
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                }
             );
 
+            const data = await response.json();
 
-            try {
+            console.log("Login response:", data);
 
-                const response =
-                    await fetch(
-                        API_BASE_URL + "/login",
-                        {
-                            method: "POST",
+            if (!response.ok) {
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                username: username,
-                                password: password
-                            })
-                        }
-                    );
-
-
-                console.log(
-                    "Login HTTP Status:",
-                    response.status
+                throw new Error(
+                    data.detail || "Invalid username or password"
                 );
-
-
-                let data = {};
-
-                try {
-
-                    data =
-                        await response.json();
-
-                } catch (jsonError) {
-
-                    console.warn(
-                        "Response was not JSON."
-                    );
-
-                }
-
-
-                console.log(
-                    "Login response:",
-                    data
-                );
-
-                if (!response.ok) {
-
-                    let message =
-                        "Invalid username or password.";
-
-                    if (data.detail) {
-
-                        if (
-                            typeof data.detail ===
-                            "string"
-                        ) {
-
-                            message =
-                                data.detail;
-
-                        }
-                    }
-
-                    showError(message);
-
-                    resetLoginButton();
-
-                    return;
-                }
-
-
-                console.log(
-                    "Login successful."
-                );
-
-
-                // Save token if backend sends one
-                const token =
-                    data.access_token ||
-                    data.token ||
-                    data.accessToken;
-
-
-                if (token) {
-
-                    sessionStorage.setItem(
-                        "adminToken",
-                        token
-                    );
-
-                    console.log(
-                        "Admin token saved."
-                    );
-
-                } else {
-
-                    console.warn(
-                        "No access token returned by backend."
-                    );
-                }
-
-
-                // Save login state
-                sessionStorage.setItem(
-                    "adminLoggedIn",
-                    "true"
-                );
-
-
-
-                loginBtn.innerHTML = `
-                    <span class="button-content">
-                        <i data-lucide="check-circle"></i>
-                        <span>Login Successful</span>
-                    </span>
-                `;
-
-
-                if (window.lucide) {
-                    lucide.createIcons();
-                }
-
-
-                console.log(
-                    "Redirecting to dashboard..."
-                );
-
-
-                setTimeout(
-                    function () {
-
-                        window.location.href =
-                            "../pages/dashboard.html";
-
-                    },
-                    500
-                );
-
             }
 
+            // Backend returns the login token
+            const token =
+                typeof data === "string"
+                    ? data
+                    : (
+                        data.access_token ||
+                        data.token ||
+                        data.accessToken
+                    );
 
-            catch (error) {
-
-                console.error(
-                    "Login error:",
-                    error
-                );
-
-
-                showError(
-                    "Unable to connect to the server. Please try again."
-                );
-
-
-                resetLoginButton();
-
+            if (token) {
+                sessionStorage.setItem("adminToken", token);
             }
 
-        }
-    );
+            sessionStorage.setItem(
+                "adminLoggedIn",
+                "true"
+            );
 
+            // Go to dashboard
+            window.location.href =
+                "../pages/dashboard.html";
 
-    // ========================================
-    // SHOW ERROR
-    // ========================================
+        } catch (error) {
 
-    function showError(message) {
+            console.error("Login error:", error);
 
-        if (!errorMessage) {
-            return;
-        }
+            errorMessage.textContent =
+                "❌ " + error.message;
 
+            errorMessage.style.display = "block";
 
-        errorMessage.textContent =
-            message;
+            loginBtn.disabled = false;
 
-        errorMessage.style.display =
-            "block";
-
-    }
-
-
-
-    function resetLoginButton() {
-
-        loginBtn.disabled = false;
-
-        loginBtn.innerHTML = `
-            <span class="button-content">
-                <i data-lucide="log-in"></i>
-                <span>Sign In</span>
-            </span>
-        `;
-
-
-        if (window.lucide) {
-            lucide.createIcons();
+            loginBtn.querySelector(".button-content span").textContent =
+                "Sign In";
         }
 
-    }
+    });
 
 });
-
-        loadQuestions();
-
-    }
-);
