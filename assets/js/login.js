@@ -176,10 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 token ? "YES" : "NO"
             );
 
-            // ========================================
-            // SAVE LOGIN
-            // ========================================
-
             if (token) {
 
                 sessionStorage.setItem(
