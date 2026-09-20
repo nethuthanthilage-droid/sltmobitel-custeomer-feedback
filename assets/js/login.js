@@ -1,453 +1,267 @@
+// ========================================
+// SLTMobitel ADMIN LOGIN
+// ========================================
+
+// API_BASE_URL comes from config.js
+// DO NOT declare API_BASE_URL again here.
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    console.log("=================================");
-    console.log("SLTMobitel Admin Login");
-    console.log("API:", API_BASE_URL);
-    console.log("=================================");
+    console.log("Login page loaded");
 
-
-    const loginForm =
-        document.getElementById("loginForm");
-
-    const usernameInput =
-        document.getElementById("username");
-
-    const passwordInput =
-        document.getElementById("password");
-
-    const loginBtn =
-        document.getElementById("loginBtn");
-
-    const errorMessage =
-        document.getElementById("errorMessage");
-
-    const togglePassword =
-        document.getElementById("togglePassword");
-
+    const loginForm = document.getElementById("loginForm");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const loginButton = document.getElementById("loginBtn");
+    const errorMessage = document.getElementById("errorMessage");
+    const togglePassword = document.getElementById("togglePassword");
 
 
     if (!loginForm) {
-
-        console.error(
-            "ERROR: loginForm not found."
-        );
-
+        console.error("loginForm not found");
         return;
     }
 
-
-    if (!usernameInput) {
-
-        console.error(
-            "ERROR: username input not found."
-        );
-
+    if (!usernameInput || !passwordInput) {
+        console.error("Username or password input not found");
         return;
     }
 
+    if (togglePassword) {
 
-    if (!passwordInput) {
+        togglePassword.addEventListener("click", function () {
 
-        console.error(
-            "ERROR: password input not found."
-        );
+            if (passwordInput.type === "password") {
 
-        return;
+                passwordInput.type = "text";
+
+                this.innerHTML =
+                    '<i data-lucide="eye-off"></i>';
+
+            } else {
+
+                passwordInput.type = "password";
+
+                this.innerHTML =
+                    '<i data-lucide="eye"></i>';
+            }
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        });
     }
 
 
+    loginForm.addEventListener("submit", async function (event) {
 
-    function clearError() {
+        event.preventDefault();
 
+        console.log("Login button clicked");
+
+        const username =
+            usernameInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+        // Clear old error
         if (errorMessage) {
-
             errorMessage.textContent = "";
-
-            errorMessage.style.display =
-                "none";
+            errorMessage.style.display = "none";
         }
-    }
+
+
+        if (!username || !password) {
+
+            showError("Please enter username and password.");
+
+            return;
+        }
+
+
+        if (loginButton) {
+
+            loginButton.disabled = true;
+
+            loginButton.innerHTML = `
+                <span class="button-content">
+                    <span>Signing in...</span>
+                </span>
+            `;
+        }
+
+        console.log(
+            "Sending login request to:",
+            API_BASE_URL + "/login"
+        );
+
+        try {
+
+
+            const response = await fetch(
+                API_BASE_URL + "/login",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                }
+            );
+
+            console.log(
+                "Login HTTP status:",
+                response.status
+            );
+
+            let data = null;
+
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+
+                console.error(
+                    "Could not read JSON response:",
+                    jsonError
+                );
+            }
+
+            console.log(
+                "Login response:",
+                data
+            );
+
+            if (!response.ok) {
+
+                let message =
+                    "Login failed.";
+
+                if (data) {
+
+                    if (typeof data.detail === "string") {
+                        message = data.detail;
+                    }
+                    else if (typeof data.message === "string") {
+                        message = data.message;
+                    }
+                }
+
+                throw new Error(message);
+            }
+
+
+            let token = "";
+
+            if (typeof data === "string") {
+
+                token = data;
+
+            } else if (data) {
+
+                token =
+                    data.access_token ||
+                    data.token ||
+                    data.accessToken ||
+                    data.jwt ||
+                    "";
+            }
+
+            console.log(
+                "Login successful"
+            );
+
+            console.log(
+                "Token received:",
+                token ? "YES" : "NO"
+            );
+
+            // ========================================
+            // SAVE LOGIN
+            // ========================================
+
+            if (token) {
+
+                sessionStorage.setItem(
+                    "adminToken",
+                    token
+                );
+
+            }
+
+            sessionStorage.setItem(
+                "adminLoggedIn",
+                "true"
+            );
+
+            sessionStorage.setItem(
+                "adminUsername",
+                username
+            );
+
+            console.log(
+                "Redirecting to dashboard..."
+            );
+
+            window.location.href = "dashboard.html";
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+            showError(
+                error.message ||
+                "Unable to login. Please try again."
+            );
+
+            // Restore button
+            if (loginButton) {
+
+                loginButton.disabled = false;
+
+                loginButton.innerHTML = `
+                    <span class="button-content">
+                        <i data-lucide="log-in"></i>
+                        <span>Sign In</span>
+                    </span>
+                `;
+
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+            }
+        }
+
+    });
+
 
     function showError(message) {
 
         console.error(
-            "LOGIN ERROR:",
+            "Login error:",
             message
         );
 
         if (errorMessage) {
 
             errorMessage.textContent =
-                "❌ " + message;
+                message;
 
             errorMessage.style.display =
                 "block";
         }
-    }
-
-
-    function setLoading(loading) {
-
-        if (!loginBtn) {
-            return;
-        }
-
-
-        loginBtn.disabled = loading;
-
-
-        const buttonText =
-            loginBtn.querySelector(
-                ".button-content span"
-            );
-
-
-        if (buttonText) {
-
-            buttonText.textContent =
-                loading
-                    ? "Signing in..."
-                    : "Sign In";
-        }
-    }
-
-
-    // -------------------------------------------------
-    // Password show / hide
-    // -------------------------------------------------
-
-    if (togglePassword) {
-
-        togglePassword.addEventListener(
-            "click",
-            function () {
-
-                const isPassword =
-                    passwordInput.type === "password";
-
-
-                passwordInput.type =
-                    isPassword
-                        ? "text"
-                        : "password";
-
-
-                this.setAttribute(
-                    "aria-label",
-                    isPassword
-                        ? "Hide password"
-                        : "Show password"
-                );
-
-
-                this.innerHTML =
-                    isPassword
-                        ? '<i data-lucide="eye-off"></i>'
-                        : '<i data-lucide="eye"></i>';
-
-
-                if (window.lucide) {
-
-                    lucide.createIcons();
-                }
-
-            }
-        );
-    }
-
-
-    // -------------------------------------------------
-    // LOGIN
-    // -------------------------------------------------
-
-    loginForm.addEventListener(
-        "submit",
-        async function (event) {
-
-            event.preventDefault();
-
-
-            clearError();
-
-
-            const username =
-                usernameInput.value.trim();
-
-
-            const password =
-                passwordInput.value;
-
-
-            console.log(
-                "Username entered:",
-                username
-            );
-
-            if (username === "") {
-
-                showError(
-                    "Please enter your username."
-                );
-
-                usernameInput.focus();
-
-                return;
-            }
-
-
-            if (password === "") {
-
-                showError(
-                    "Please enter your password."
-                );
-
-                passwordInput.focus();
-
-                return;
-            }
-
-
-            setLoading(true);
-
-
-            try {
-
-                console.log(
-                    "Sending login request..."
-                );
-
-
-                const response =
-                    await fetch(
-                        API_BASE_URL + "/login",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
-
-                                "Accept":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                username:
-                                    username,
-
-                                password:
-                                    password
-                            })
-                        }
-                    );
-
-
-                console.log(
-                    "Login status:",
-                    response.status
-                );
-
-
-                // -------------------------------------
-                // Read response
-                // -------------------------------------
-
-                const responseText =
-                    await response.text();
-
-
-                console.log(
-                    "Server response:",
-                    responseText
-                );
-
-
-                let data;
-
-
-                try {
-
-                    data =
-                        JSON.parse(
-                            responseText
-                        );
-
-                }
-                catch (jsonError) {
-
-                    data =
-                        responseText;
-                }
-
-
-
-                if (!response.ok) {
-
-                    let message =
-                        "Invalid username or password.";
-
-
-                    if (
-                        data &&
-                        typeof data === "object" &&
-                        data.detail
-                    ) {
-
-                        if (
-                            typeof data.detail ===
-                            "string"
-                        ) {
-
-                            message =
-                                data.detail;
-
-                        }
-                        else {
-
-                            message =
-                                JSON.stringify(
-                                    data.detail
-                                );
-                        }
-                    }
-
-
-                    showError(message);
-
-                    setLoading(false);
-
-                    return;
-                }
-
-                let token = null;
-
-
-                if (
-                    typeof data === "string"
-                ) {
-
-                    token = data;
-
-                }
-                else if (
-                    data &&
-                    data.access_token
-                ) {
-
-                    token =
-                        data.access_token;
-
-                }
-                else if (
-                    data &&
-                    data.token
-                ) {
-
-                    token =
-                        data.token;
-
-                }
-                else if (
-                    data &&
-                    data.accessToken
-                ) {
-
-                    token =
-                        data.accessToken;
-                }
-
-
-
-                if (token) {
-
-                    sessionStorage.setItem(
-                        "adminToken",
-                        token
-                    );
-
-                    console.log(
-                        "Admin token saved."
-                    );
-                }
-
-
-                sessionStorage.setItem(
-                    "adminLoggedIn",
-                    "true"
-                );
-
-
-                sessionStorage.setItem(
-                    "adminUsername",
-                    username
-                );
-
-
-                console.log(
-                    "LOGIN SUCCESSFUL"
-                );
-
-
-
-                window.location.href =
-                    "../pages/dashboard.html";
-
-            }
-            catch (error) {
-
-                console.error(
-                    "Login request failed:",
-                    error
-                );
-
-
-                showError(
-                    "Could not connect to the server. Please try again."
-                );
-
-
-                setLoading(false);
-            }
-
-        }
-    );
-
-
-
-    passwordInput.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (event.key === "Enter") {
-
-                event.preventDefault();
-
-                loginForm.requestSubmit();
-            }
-
-        }
-    );
-
-
-    usernameInput.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (event.key === "Enter") {
-
-                event.preventDefault();
-
-                passwordInput.focus();
-            }
-
-        }
-    );
-
-
-
-    if (window.lucide) {
-
-        lucide.createIcons();
     }
 
 });
