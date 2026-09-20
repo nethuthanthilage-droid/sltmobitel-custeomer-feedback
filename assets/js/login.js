@@ -1,10 +1,3 @@
-// ========================================
-// SLTMobitel ADMIN LOGIN
-// ========================================
-
-// API_BASE_URL comes from config.js
-// DO NOT declare API_BASE_URL again here.
-
 document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Login page loaded");
