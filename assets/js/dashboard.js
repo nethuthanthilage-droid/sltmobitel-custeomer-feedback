@@ -1,6 +1,10 @@
 console.log("SLTMobitel Dashboard JS loaded");
 
 
+/* =========================================================
+   ADMIN SESSION
+========================================================= */
+
 const adminLoggedIn =
     sessionStorage.getItem("adminLoggedIn");
 
@@ -19,11 +23,21 @@ if (
 
     window.location.href =
         "login.html";
+
 }
 
 
+/* =========================================================
+   API
+========================================================= */
+
 const DASHBOARD_API =
     API_BASE_URL;
+
+
+/* =========================================================
+   HTML ELEMENTS
+========================================================= */
 
 const totalFeedback =
     document.getElementById("totalFeedback");
@@ -55,17 +69,29 @@ const recordCount =
 const errorMessage =
     document.getElementById("errorMessage");
 
+
+/* =========================================================
+   HEADERS
+========================================================= */
+
 function getHeaders() {
 
     return {
+
         "Content-Type":
             "application/json",
 
         "Authorization":
             "Bearer " + adminToken
+
     };
+
 }
 
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
 
 function showDashboardError(message) {
 
@@ -81,15 +107,27 @@ function showDashboardError(message) {
 
         errorMessage.style.display =
             "block";
+
     }
+
 }
 
+
+/* =========================================================
+   LOAD DASHBOARD
+========================================================= */
 
 async function loadDashboard() {
 
     console.log(
         "Loading dashboard..."
     );
+
+    console.log(
+        "API:",
+        DASHBOARD_API
+    );
+
 
     try {
 
@@ -123,6 +161,7 @@ async function loadDashboard() {
                     "login.html";
 
                 return;
+
             }
 
 
@@ -130,6 +169,7 @@ async function loadDashboard() {
                 "Dashboard request failed: " +
                 response.status
             );
+
         }
 
 
@@ -145,6 +185,8 @@ async function loadDashboard() {
 
         updateDashboard(data);
 
+        createCharts(data);
+
     }
     catch (error) {
 
@@ -156,16 +198,17 @@ async function loadDashboard() {
         showDashboardError(
             error.message
         );
+
     }
+
 }
 
+
+/* =========================================================
+   UPDATE KPI CARDS
+========================================================= */
+
 function updateDashboard(data) {
-
-    /*
-        Your backend may return different names.
-        This code supports common formats.
-    */
-
 
     const total =
         Number(
@@ -269,8 +312,6 @@ function updateDashboard(data) {
     );
 
 
-    // Try to find feedback records
-
     const feedback =
         data.feedback ||
         data.records ||
@@ -288,15 +329,26 @@ function updateDashboard(data) {
 
 }
 
+
+/* =========================================================
+   SET TEXT
+========================================================= */
+
 function setText(element, value) {
 
     if (element) {
+
         element.textContent =
             value;
+
     }
 
 }
 
+
+/* =========================================================
+   FEEDBACK TABLE
+========================================================= */
 
 function displayFeedbackTable(records) {
 
@@ -316,12 +368,16 @@ function displayFeedbackTable(records) {
             </tr>
         `;
 
+
         if (recordCount) {
+
             recordCount.textContent =
                 "0 records";
+
         }
 
         return;
+
     }
 
 
@@ -430,13 +486,21 @@ function displayFeedbackTable(records) {
     }
 
 }
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
 function escapeHTML(value) {
 
     if (
         value === null ||
         value === undefined
     ) {
+
         return "-";
+
     }
 
 
@@ -446,13 +510,20 @@ function escapeHTML(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+
 }
 
+
+/* =========================================================
+   DATE
+========================================================= */
 
 function formatDate(value) {
 
     if (!value) {
+
         return "-";
+
     }
 
 
@@ -474,109 +545,16 @@ function formatDate(value) {
     catch {
 
         return value;
+
     }
 
 }
 
 
-const logoutBtn =
-    document.getElementById("logoutBtn");
+/* =========================================================
+   CHART VARIABLES
+========================================================= */
 
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener(
-        "click",
-        function () {
-
-            sessionStorage.removeItem(
-                "adminToken"
-            );
-
-            sessionStorage.removeItem(
-                "adminLoggedIn"
-            );
-
-            window.location.href =
-                "login.html";
-
-        }
-    );
-
-}
-
-
-
-const refreshBtn =
-    document.getElementById("refreshBtn");
-
-
-if (refreshBtn) {
-
-    refreshBtn.addEventListener(
-        "click",
-        function () {
-
-            loadDashboard();
-
-        }
-    );
-
-}
-
-
-const currentDateElement =
-    document.getElementById(
-        "currentDate"
-    );
-
-
-if (currentDateElement) {
-
-    const today =
-        new Date();
-
-
-    currentDateElement.textContent =
-        today.toLocaleDateString(
-            "en-GB",
-            {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-            }
-        );
-
-}
-
-const mobileMenuBtn =
-    document.getElementById(
-        "mobileMenuBtn"
-    );
-
-const sidebar =
-    document.getElementById(
-        "sidebar"
-    );
-
-
-if (
-    mobileMenuBtn &&
-    sidebar
-) {
-
-    mobileMenuBtn.addEventListener(
-        "click",
-        function () {
-
-            sidebar.classList.toggle(
-                "mobile-open"
-            );
-
-        }
-    );
-
-}
 let sentimentChart;
 let serviceChart;
 let waitingChart;
@@ -585,18 +563,35 @@ let officeChart;
 let weeklyChart;
 
 
+/* =========================================================
+   DESTROY CHART
+========================================================= */
+
 function destroyChart(chart) {
 
     if (chart) {
+
         chart.destroy();
+
     }
 
 }
 
+
+/* =========================================================
+   CREATE ALL CHARTS
+========================================================= */
+
 function createCharts(data) {
 
     if (!window.Chart) {
+
+        console.error(
+            "Chart.js not loaded."
+        );
+
         return;
+
     }
 
 
@@ -610,6 +605,30 @@ function createCharts(data) {
         {};
 
 
+    const waiting =
+        data.waiting ||
+        data.waiting_time ||
+        {};
+
+
+    const staff =
+        data.staff ||
+        data.staff_rating ||
+        {};
+
+
+    const office =
+        data.office ||
+        data.office_environment ||
+        {};
+
+
+    const weekly =
+        data.weekly ||
+        data.weekly_feedback ||
+        {};
+
+
     createSentimentChart(
         sentiment
     );
@@ -619,7 +638,45 @@ function createCharts(data) {
         services
     );
 
+
+    createSimpleChart(
+        "waitingChart",
+        "Waiting Time",
+        waiting,
+        "waiting"
+    );
+
+
+    createSimpleChart(
+        "staffChart",
+        "Staff Rating",
+        staff,
+        "staff"
+    );
+
+
+    createSimpleChart(
+        "officeChart",
+        "Office Environment",
+        office,
+        "office"
+    );
+
+
+    createSimpleChart(
+        "weeklyChart",
+        "Weekly Feedback",
+        weekly,
+        "weekly"
+    );
+
 }
+
+
+/* =========================================================
+   SENTIMENT CHART
+========================================================= */
+
 function createSentimentChart(data) {
 
     const canvas =
@@ -629,7 +686,9 @@ function createSentimentChart(data) {
 
 
     if (!canvas) {
+
         return;
+
     }
 
 
@@ -642,9 +701,11 @@ function createSentimentChart(data) {
         new Chart(
             canvas,
             {
+
                 type: "doughnut",
 
                 data: {
+
                     labels: [
                         "Positive",
                         "Neutral",
@@ -652,8 +713,11 @@ function createSentimentChart(data) {
                     ],
 
                     datasets: [
+
                         {
+
                             data: [
+
                                 Number(
                                     data.positive || 0
                                 ),
@@ -665,21 +729,34 @@ function createSentimentChart(data) {
                                 Number(
                                     data.negative || 0
                                 )
+
                             ]
+
                         }
+
                     ]
+
                 },
 
                 options: {
+
                     responsive: true,
 
                     maintainAspectRatio:
                         false
+
                 }
+
             }
         );
 
 }
+
+
+/* =========================================================
+   SERVICE CHART
+========================================================= */
+
 function createServiceChart(data) {
 
     const canvas =
@@ -689,7 +766,9 @@ function createServiceChart(data) {
 
 
     if (!canvas) {
+
         return;
+
     }
 
 
@@ -711,32 +790,187 @@ function createServiceChart(data) {
         new Chart(
             canvas,
             {
+
                 type: "bar",
 
                 data: {
+
                     labels: labels,
 
                     datasets: [
+
                         {
+
                             label:
                                 "Feedback",
 
                             data:
                                 values
+
                         }
+
                     ]
+
                 },
 
                 options: {
+
                     responsive: true,
 
                     maintainAspectRatio:
                         false
+
                 }
+
             }
         );
 
 }
+
+
+/* =========================================================
+   OTHER CHARTS
+========================================================= */
+
+function createSimpleChart(
+    canvasId,
+    label,
+    data,
+    chartType
+) {
+
+    const canvas =
+        document.getElementById(
+            canvasId
+        );
+
+
+    if (!canvas) {
+
+        return;
+
+    }
+
+
+    let chart;
+
+
+    if (chartType === "waiting") {
+
+        chart = waitingChart;
+
+    }
+
+    else if (chartType === "staff") {
+
+        chart = staffChart;
+
+    }
+
+    else if (chartType === "office") {
+
+        chart = officeChart;
+
+    }
+
+    else if (chartType === "weekly") {
+
+        chart = weeklyChart;
+
+    }
+
+
+    destroyChart(chart);
+
+
+    const labels =
+        Object.keys(data);
+
+
+    const values =
+        Object.values(data)
+            .map(Number);
+
+
+    const newChart =
+        new Chart(
+            canvas,
+            {
+
+                type:
+                    chartType === "weekly"
+                        ? "line"
+                        : "bar",
+
+                data: {
+
+                    labels:
+                        labels,
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                label,
+
+                            data:
+                                values
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio:
+                        false
+
+                }
+
+            }
+        );
+
+
+    if (chartType === "waiting") {
+
+        waitingChart =
+            newChart;
+
+    }
+
+    else if (chartType === "staff") {
+
+        staffChart =
+            newChart;
+
+    }
+
+    else if (chartType === "office") {
+
+        officeChart =
+            newChart;
+
+    }
+
+    else if (chartType === "weekly") {
+
+        weeklyChart =
+            newChart;
+
+    }
+
+}
+
+
+/* =========================================================
+   AI SUMMARY
+========================================================= */
+
 async function loadAISummary() {
 
     try {
@@ -753,7 +987,14 @@ async function loadAISummary() {
 
 
         if (!response.ok) {
+
+            console.error(
+                "AI summary failed:",
+                response.status
+            );
+
             return;
+
         }
 
 
@@ -826,7 +1067,9 @@ async function loadAISummary() {
 
 }
 
-async function downloadAISummaryWord() {
+
+
+function downloadAISummaryWord() {
 
     window.open(
         DASHBOARD_API +
@@ -836,7 +1079,8 @@ async function downloadAISummaryWord() {
 
 }
 
-async function downloadFeedbackWord() {
+
+function downloadFeedbackWord() {
 
     window.open(
         DASHBOARD_API +
@@ -855,6 +1099,115 @@ window.downloadAISummaryWord =
 
 window.downloadFeedbackWord =
     downloadFeedbackWord;
+
+
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        function () {
+
+            sessionStorage.removeItem(
+                "adminToken"
+            );
+
+            sessionStorage.removeItem(
+                "adminLoggedIn"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+}
+
+const refreshBtn =
+    document.getElementById(
+        "refreshBtn"
+    );
+
+
+if (refreshBtn) {
+
+    refreshBtn.addEventListener(
+        "click",
+        function () {
+
+            loadDashboard();
+            loadAISummary();
+
+        }
+    );
+
+}
+
+
+
+const currentDateElement =
+    document.getElementById(
+        "currentDate"
+    );
+
+
+if (currentDateElement) {
+
+    const today =
+        new Date();
+
+
+    currentDateElement.textContent =
+        today.toLocaleDateString(
+            "en-GB",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
+
+}
+
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+if (
+    mobileMenuBtn &&
+    sidebar
+) {
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        function () {
+
+            sidebar.classList.toggle(
+                "mobile-open"
+            );
+
+        }
+    );
+
+}
+
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -879,7 +1232,9 @@ document.addEventListener(
 
 
         if (window.lucide) {
+
             lucide.createIcons();
+
         }
 
 
