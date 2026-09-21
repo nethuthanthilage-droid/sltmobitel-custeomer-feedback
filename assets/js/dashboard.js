@@ -1,10 +1,5 @@
 console.log("SLTMobitel Dashboard JS loaded");
 
-
-/* =========================================================
-   ADMIN SESSION
-========================================================= */
-
 const adminLoggedIn =
     sessionStorage.getItem("adminLoggedIn");
 
@@ -27,17 +22,10 @@ if (
 }
 
 
-/* =========================================================
-   API
-========================================================= */
-
 const DASHBOARD_API =
     API_BASE_URL;
 
 
-/* =========================================================
-   HTML ELEMENTS
-========================================================= */
 
 const totalFeedback =
     document.getElementById("totalFeedback");
@@ -89,10 +77,6 @@ function getHeaders() {
 }
 
 
-/* =========================================================
-   ERROR MESSAGE
-========================================================= */
-
 function showDashboardError(message) {
 
     console.error(
@@ -112,10 +96,6 @@ function showDashboardError(message) {
 
 }
 
-
-/* =========================================================
-   LOAD DASHBOARD
-========================================================= */
 
 async function loadDashboard() {
 
@@ -204,9 +184,6 @@ async function loadDashboard() {
 }
 
 
-/* =========================================================
-   UPDATE KPI CARDS
-========================================================= */
 
 function updateDashboard(data) {
 
@@ -329,11 +306,6 @@ function updateDashboard(data) {
 
 }
 
-
-/* =========================================================
-   SET TEXT
-========================================================= */
-
 function setText(element, value) {
 
     if (element) {
@@ -344,11 +316,6 @@ function setText(element, value) {
     }
 
 }
-
-
-/* =========================================================
-   FEEDBACK TABLE
-========================================================= */
 
 function displayFeedbackTable(records) {
 
@@ -488,10 +455,6 @@ function displayFeedbackTable(records) {
 }
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
 function escapeHTML(value) {
 
     if (
@@ -514,9 +477,6 @@ function escapeHTML(value) {
 }
 
 
-/* =========================================================
-   DATE
-========================================================= */
 
 function formatDate(value) {
 
@@ -551,9 +511,6 @@ function formatDate(value) {
 }
 
 
-/* =========================================================
-   CHART VARIABLES
-========================================================= */
 
 let sentimentChart;
 let serviceChart;
@@ -563,9 +520,6 @@ let officeChart;
 let weeklyChart;
 
 
-/* =========================================================
-   DESTROY CHART
-========================================================= */
 
 function destroyChart(chart) {
 
@@ -578,9 +532,6 @@ function destroyChart(chart) {
 }
 
 
-/* =========================================================
-   CREATE ALL CHARTS
-========================================================= */
 
 function createCharts(data) {
 
@@ -673,10 +624,6 @@ function createCharts(data) {
 }
 
 
-/* =========================================================
-   SENTIMENT CHART
-========================================================= */
-
 function createSentimentChart(data) {
 
     const canvas =
@@ -753,9 +700,6 @@ function createSentimentChart(data) {
 }
 
 
-/* =========================================================
-   SERVICE CHART
-========================================================= */
 
 function createServiceChart(data) {
 
@@ -827,10 +771,6 @@ function createServiceChart(data) {
 
 }
 
-
-/* =========================================================
-   OTHER CHARTS
-========================================================= */
 
 function createSimpleChart(
     canvasId,
@@ -967,9 +907,6 @@ function createSimpleChart(
 }
 
 
-/* =========================================================
-   AI SUMMARY
-========================================================= */
 
 async function loadAISummary() {
 
