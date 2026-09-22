@@ -321,49 +321,7 @@
     <script src="../assets/js/config.js"></script>
     <script src="../assets/js/login.js"></script>
 
-    <script>
-
-        lucide.createIcons();
-
-
-        const togglePassword =
-            document.getElementById("togglePassword");
-
-        const password =
-            document.getElementById("password");
-
-
-        if (togglePassword && password) {
-
-            togglePassword.addEventListener(
-                "click",
-                function () {
-
-                    const hidden =
-                        password.type === "password";
-
-                    password.type =
-                        hidden ? "text" : "password";
-
-                    this.innerHTML = hidden
-                        ? '<i data-lucide="eye-off"></i>'
-                        : '<i data-lucide="eye"></i>';
-
-                    this.setAttribute(
-                        "aria-label",
-                        hidden
-                            ? "Hide password"
-                            : "Show password"
-                    );
-
-                    lucide.createIcons();
-
-                }
-            );
-
-        }
-
-    </script>
+   
 
 </body>
 
