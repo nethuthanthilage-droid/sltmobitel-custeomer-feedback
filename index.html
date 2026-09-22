@@ -1,493 +1,504 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SLTMobitel | Customer Feedback</title>
+    <title>SLTMobitel | Customer Feedback</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-<link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
->
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
 
-
-<link rel="stylesheet" href="assets/css/style.css">
-
-<script src="https://unpkg.com/lucide@latest"></script>
-
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
 
 <body>
 
+    <div class="chat-container">
 
-<div class="chat-container">
+        <header class="header">
 
-    <header class="header">
+            <div class="header-brand">
 
-        <div class="header-brand">
+                <div class="brand-icon">
+                    <i data-lucide="bot"></i>
+                </div>
 
-            <div class="brand-icon">
-                <i data-lucide="bot"></i>
+                <div>
+                    <h1>SLTMobitel</h1>
+                    <p>Customer Feedback Assistant</p>
+                </div>
+
             </div>
 
-            <div>
-                <h1>SLTMobitel</h1>
-                <p>Customer Feedback Assistant</p>
-            </div>
-
-        </div>
-
-
-        <a href="pages/login.html" class="admin-login-btn">
-
-            <i data-lucide="lock"></i>
-
-            <span>Admin Login</span>
-
-        </a>
-
-    </header>
-
-    <section class="language-section">
-
-        <div class="language-heading">
-
-            <i data-lucide="languages"></i>
-
-            <span>Select Your Language</span>
-
-        </div>
-
-
-        <div class="language-selection">
-
-            <button
-                type="button"
-                id="englishBtn"
-                class="language-btn active"
-                onclick="setLanguage('en')">
-
-                <span>🇬🇧</span>
-                <span>English</span>
-
-            </button>
-
-
-            <button
-                type="button"
-                id="sinhalaBtn"
-                class="language-btn"
-                onclick="setLanguage('si')">
-
-                <span>🇱🇰</span>
-                <span>සිංහල</span>
-
-            </button>
-
-        </div>
-
-    </section>
-
-    <main id="chatBox" class="chat-box">
-
-       
-
-    </main>
-
-
-
-    <section id="inputArea" class="input-area">
-
-        <div class="input-wrapper">
-
-            <input
-                type="text"
-                id="userInput"
-                placeholder="Type your answer..."
-                autocomplete="off"
+            <a
+                href="pages/login.html"
+                class="admin-login-btn"
             >
+                <i data-lucide="lock"></i>
+                <span>Admin Login</span>
+            </a>
 
-            <button
-                type="button"
-                class="send-button"
-                onclick="sendAnswer()">
+        </header>
 
-                <span>Send</span>
+        <section class="language-section">
 
-                <i data-lucide="send"></i>
+            <div class="language-heading">
 
-            </button>
+                <i data-lucide="languages"></i>
 
-        </div>
-
-
-        <div class="input-help">
-
-            <i data-lucide="shield-check"></i>
-
-            <span>
-                Your feedback helps us improve our service.
-            </span>
-
-        </div>
-
-    </section>
-
-    <footer class="chat-footer">
-
-        <div class="system-status">
-
-            <span class="status-dot"></span>
-
-            <span>System Online</span>
-
-        </div>
-
-        <span class="footer-separator">•</span>
-
-        <span>SLTMobitel Customer Experience</span>
-
-    </footer>
-
-</div>
-
-
-<script src="assets/js/config.js"></script>
-
-<script src="assets/js/script.js"></script>
-
-
-
-<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-
-    });
-
-    function updateLanguageButtons(language) {
-
-        const englishBtn =
-            document.getElementById("englishBtn");
-
-        const sinhalaBtn =
-            document.getElementById("sinhalaBtn");
-
-
-        if (!englishBtn || !sinhalaBtn) {
-            return;
-        }
-
-
-        englishBtn.classList.remove("active");
-
-        sinhalaBtn.classList.remove("active");
-
-
-        if (language === "en") {
-
-            englishBtn.classList.add("active");
-
-        } else {
-
-            sinhalaBtn.classList.add("active");
-
-        }
-
-    }
-
-
-    /*
-     * =========================
-     * TRY AGAIN
-     * =========================
-     */
-
-    function restartFeedback() {
-
-        /*
-         * Reset question
-         */
-
-        if (typeof currentQuestion !== "undefined") {
-            currentQuestion = 0;
-        }
-
-
-        /*
-         * Reset answers
-         */
-
-        if (typeof answers !== "undefined") {
-            answers = {};
-        }
-
-
-        /*
-         * Clear chat
-         */
-
-        const chatBox =
-            document.getElementById("chatBox");
-
-        if (chatBox) {
-            chatBox.innerHTML = "";
-        }
-
-
-        /*
-         * Show input
-         */
-
-        const inputArea =
-            document.getElementById("inputArea");
-
-        if (inputArea) {
-            inputArea.style.display = "block";
-        }
-
-
-        /*
-         * Clear input
-         */
-
-        const userInput =
-            document.getElementById("userInput");
-
-        if (userInput) {
-            userInput.value = "";
-        }
-
-
-        /*
-         * Start again
-         */
-
-        if (typeof showQuestion === "function") {
-            showQuestion();
-        }
-
-
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-
-    }
-
-
-    /*
-     * =========================
-     * EXIT
-     * =========================
-     */
-
-    function exitFeedback() {
-
-        const chatBox =
-            document.getElementById("chatBox");
-
-        const inputArea =
-            document.getElementById("inputArea");
-
-
-        if (inputArea) {
-            inputArea.style.display = "none";
-        }
-
-
-        if (!chatBox) {
-            return;
-        }
-
-
-        chatBox.innerHTML = `
-
-            <div class="completion-screen">
-
-                <div class="completion-icon">
-
-                    <i data-lucide="check-circle"></i>
-
-                </div>
-
-
-                <h2>
-                    Thank You!
-                </h2>
-
-
-                <p>
-                    Thank you for sharing your feedback
-                    with SLTMobitel.
-                </p>
-
-
-                <span class="completion-subtext">
-                    Your feedback helps us improve
-                    our customer experience.
-                </span>
-
-
-                <div class="completion-actions">
-
-                    <button
-                        type="button"
-                        class="try-again-btn"
-                        onclick="restartFeedback()">
-
-                        <i data-lucide="rotate-ccw"></i>
-
-                        <span>Try Again</span>
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="exit-btn"
-                        onclick="closeFeedback()">
-
-                        <i data-lucide="log-out"></i>
-
-                        <span>Exit</span>
-
-                    </button>
-
-                </div>
+                <span>Select Your Language</span>
 
             </div>
 
-        `;
+
+            <div class="language-selection">
+
+                <!-- English -->
+                <button
+                    type="button"
+                    id="englishBtn"
+                    class="language-btn active"
+                    onclick="setLanguage('en')"
+                >
+                    <span>🇬🇧</span>
+                    <span>English</span>
+                </button>
 
 
-        if (window.lucide) {
-            lucide.createIcons();
-        }
+                <!-- Sinhala -->
+                <button
+                    type="button"
+                    id="sinhalaBtn"
+                    class="language-btn"
+                    onclick="setLanguage('si')"
+                >
+                    <span>🇱🇰</span>
+                    <span>සිංහල</span>
+                </button>
 
-    }
+            </div>
 
-
-    /*
-     * =========================
-     * CLOSE FEEDBACK
-     * =========================
-     */
-
-    function closeFeedback() {
-
-        const chatBox =
-            document.getElementById("chatBox");
-
-        const inputArea =
-            document.getElementById("inputArea");
+        </section>
 
 
-        if (inputArea) {
-            inputArea.style.display = "none";
-        }
+        <main
+            id="chatBox"
+            class="chat-box"
+        >
+
+        </main>
 
 
-        if (!chatBox) {
-            return;
-        }
 
+        <section
+            id="inputArea"
+            class="input-area"
+        >
 
-        chatBox.innerHTML = `
+            <div class="input-wrapper">
 
-            <div class="exit-screen">
-
-                <div class="exit-icon">
-
-                    <i data-lucide="heart"></i>
-
-                </div>
-
-
-                <h2>
-                    Thank You!
-                </h2>
-
-
-                <p>
-                    We appreciate your valuable time.
-                </p>
-
-
-                <span>
-                    Have a great day!
-                </span>
-
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Type your answer..."
+                    autocomplete="off"
+                >
 
                 <button
                     type="button"
-                    class="try-again-btn"
-                    onclick="restartFeedback()">
+                    class="send-button"
+                    onclick="sendAnswer()"
+                >
+                    <span>Send</span>
 
-                    <i data-lucide="rotate-ccw"></i>
-
-                    <span>Give Feedback Again</span>
+                    <i data-lucide="send"></i>
 
                 </button>
 
             </div>
 
-        `;
+
+            <div class="input-help">
+
+                <i data-lucide="shield-check"></i>
+
+                <span>
+                    Your feedback helps us improve our service.
+                </span>
+
+            </div>
+
+        </section>
 
 
-        if (window.lucide) {
-            lucide.createIcons();
+        <footer class="chat-footer">
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                <span>System Online</span>
+
+            </div>
+
+            <span class="footer-separator">•</span>
+
+            <span>
+                SLTMobitel Customer Experience
+            </span>
+
+        </footer>
+
+    </div>
+
+    <script src="assets/js/config.js"></script>
+
+
+
+    <script src="assets/js/script.js"></script>
+
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+
+            }
+        );
+
+        function updateLanguageButtons(language) {
+
+            const englishBtn =
+                document.getElementById("englishBtn");
+
+            const sinhalaBtn =
+                document.getElementById("sinhalaBtn");
+
+
+            if (!englishBtn || !sinhalaBtn) {
+                return;
+            }
+
+
+            englishBtn.classList.remove("active");
+
+            sinhalaBtn.classList.remove("active");
+
+
+            if (language === "en") {
+
+                englishBtn.classList.add("active");
+
+            } else {
+
+                sinhalaBtn.classList.add("active");
+
+            }
+
         }
 
-    }
+        function restartFeedback() {
 
 
-    /*
-     * =========================
-     * ENTER KEY
-     * =========================
-     */
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const userInput =
-            document.getElementById("userInput");
+            if (
+                typeof currentQuestion !== "undefined"
+            ) {
+                currentQuestion = 0;
+            }
 
 
-        if (userInput) {
+            if (
+                typeof answers !== "undefined"
+            ) {
+                answers = {};
+            }
 
-            userInput.addEventListener(
-                "keydown",
-                function (event) {
 
-                    if (event.key === "Enter") {
+            const chatBox =
+                document.getElementById("chatBox");
 
-                        event.preventDefault();
 
-                        if (typeof sendAnswer === "function") {
-                            sendAnswer();
+            if (chatBox) {
+                chatBox.innerHTML = "";
+            }
+
+
+            /*
+             * Show input
+             */
+
+            const inputArea =
+                document.getElementById("inputArea");
+
+
+            if (inputArea) {
+                inputArea.style.display = "block";
+            }
+
+
+
+            const userInput =
+                document.getElementById("userInput");
+
+
+            if (userInput) {
+                userInput.value = "";
+            }
+
+            if (
+                typeof showQuestion === "function"
+            ) {
+                showQuestion();
+            }
+
+
+            /*
+             * Reload icons
+             */
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        }
+
+
+        function exitFeedback() {
+
+            const chatBox =
+                document.getElementById("chatBox");
+
+            const inputArea =
+                document.getElementById("inputArea");
+
+
+            if (inputArea) {
+                inputArea.style.display = "none";
+            }
+
+
+            if (!chatBox) {
+                return;
+            }
+
+
+            /*
+             * Completion screen
+             */
+
+            chatBox.innerHTML = `
+
+                <div class="completion-screen">
+
+                    <div class="completion-icon">
+
+                        <i data-lucide="check-circle"></i>
+
+                    </div>
+
+
+                    <h2>
+                        Thank You!
+                    </h2>
+
+
+                    <p>
+                        Thank you for sharing your feedback
+                        with SLTMobitel.
+                    </p>
+
+
+                    <span class="completion-subtext">
+                        Your feedback helps us improve
+                        our customer experience.
+                    </span>
+
+
+                    <div class="completion-actions">
+
+                        <button
+                            type="button"
+                            class="try-again-btn"
+                            onclick="restartFeedback()"
+                        >
+
+                            <i data-lucide="rotate-ccw"></i>
+
+                            <span>
+                                Try Again
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="exit-btn"
+                            onclick="closeFeedback()"
+                        >
+
+                            <i data-lucide="log-out"></i>
+
+                            <span>
+                                Exit
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        }
+
+        function closeFeedback() {
+
+            const chatBox =
+                document.getElementById("chatBox");
+
+            const inputArea =
+                document.getElementById("inputArea");
+
+
+            /*
+             * Hide input
+             */
+
+            if (inputArea) {
+                inputArea.style.display = "none";
+            }
+
+
+            /*
+             * Check chat box
+             */
+
+            if (!chatBox) {
+                return;
+            }
+
+
+            /*
+             * Exit screen
+             */
+
+            chatBox.innerHTML = `
+
+                <div class="exit-screen">
+
+                    <div class="exit-icon">
+
+                        <i data-lucide="heart"></i>
+
+                    </div>
+
+
+                    <h2>
+                        Thank You!
+                    </h2>
+
+
+                    <p>
+                        We appreciate your valuable time.
+                    </p>
+
+
+                    <span>
+                        Have a great day!
+                    </span>
+
+
+                    <button
+                        type="button"
+                        class="try-again-btn"
+                        onclick="restartFeedback()"
+                    >
+
+                        <i data-lucide="rotate-ccw"></i>
+
+                        <span>
+                            Give Feedback Again
+                        </span>
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+          
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+        }
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const userInput =
+                    document.getElementById("userInput");
+
+
+                if (userInput) {
+
+                    userInput.addEventListener(
+                        "keydown",
+                        function (event) {
+
+                            if (event.key === "Enter") {
+
+                                event.preventDefault();
+
+
+                                if (
+                                    typeof sendAnswer === "function"
+                                ) {
+
+                                    sendAnswer();
+
+                                }
+
+                            }
+
                         }
-
-                    }
+                    );
 
                 }
-            );
 
-        }
+            }
+        );
 
-    });
-
-</script>
+    </script>
 
 </body>
 
